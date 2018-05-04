@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BakingApp</string>
+    <string name="url_error">The provided link contains an error</string>
+    <string name="no_recipe">There is no recipe to display</string>
+    <string name="servings">Ingredients for %d people</string>
+    <string name="empty_view">Please click on a step to see the details</string>
+</resources>
