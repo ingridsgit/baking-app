@@ -109,11 +109,11 @@ public class ExoPlayerHandler implements Player.EventListener{
         if (mediaSessionCompat != null){
             mediaSessionCompat.setActive(false);
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
-            audioManager.abandonAudioFocusRequest(audioFocusRequest.build());
-        } else if (audioFocusChangeListener != null){
-            audioManager.abandonAudioFocus(audioFocusChangeListener);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
+//            audioManager.abandonAudioFocusRequest(audioFocusRequest.build());
+//        } else if (audioFocusChangeListener != null){
+//            audioManager.abandonAudioFocus(audioFocusChangeListener);
+//        }
     }
 
 

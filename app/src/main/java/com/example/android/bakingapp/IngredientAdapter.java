@@ -43,6 +43,8 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient>{
         }
         measureTextView.setText(measure);
 
+//        TODO  convert to string list
+
         return convertView;
     }
 }

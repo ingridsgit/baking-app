@@ -1,6 +1,7 @@
 package com.example.android.bakingapp.Utils;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.logging.Handler;
 
 /**
  * Created by Ingrid on 3/10/2018.
@@ -44,9 +46,36 @@ public final class NetworkUtils {
         private static final String KEY_VIDEO_URL = "videoURL";
         private static final String KEY_THUMBNAIL_URL = "thumbnailUrl";
 
+        public static Recipe getSingleRecipeFromWeb(Context context, String recipeName){
+            URL url = buildUrl(context);
+            InputStream inputStream = makeHttpRequest(url, context);
+            if (inputStream != null){
+                String response = readFromStream(inputStream);
+                if (response != null) {
+                    try {
+                        JSONArray results = new JSONArray(response);
+                        for (int i = 0; i < results.length(); i++) {
+                            JSONObject recipe = results.optJSONObject(i);
+                            String name = recipe.optString(KEY_NAME);
+                            if (name.equals(recipeName)){
+                                int recipeId = recipe.optInt(KEY_ID);
+                                ArrayList<Ingredient> ingredients = extractIngredientsFromJson(recipe.optJSONArray(KEY_INGREDIENTS));
+                                ArrayList<Step> steps = extractStepsFromJson(recipe.optJSONArray(KEY_STEPS));
+                                int servings = recipe.optInt(KEY_SERVINGS);
+                                String image = recipe.optString(KEY_IMAGE);
+                                return new Recipe(recipeId, name, ingredients, steps, servings, image);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } return null;
+        }
+
         public static ArrayList<Recipe> getDataFromWeb(Context context) {
             URL url = buildUrl(context);
-            InputStream inputStream = makeHttpRequest(url);
+            InputStream inputStream = makeHttpRequest(url, context);
             if (inputStream != null){
                 String response = readFromStream(inputStream);
                 return extractRecipesFromJson(response);
@@ -68,13 +97,13 @@ public final class NetworkUtils {
             try {
                 url = new URL(URI_BASE);
             } catch (MalformedURLException e) {
-                Toast.makeText(context, R.string.url_error, Toast.LENGTH_LONG).show();
+                Log.e(LOG_TAG, e.getMessage());
             }
             return url;
         }
 
 
-        private static InputStream makeHttpRequest(URL url) {
+        private static InputStream makeHttpRequest(URL url, Context context) {
             HttpURLConnection httpURLConnection;
             InputStream inputStream = null;
             int responseCode;
@@ -93,6 +122,8 @@ public final class NetworkUtils {
                     }
                 } catch (Exception e) {
                     Log.e(LOG_TAG, e.getMessage());
+                    return null;
+
                 }
             }
             return inputStream;

@@ -1,5 +1,20 @@
-package com.example.android.bakingapp;
 
+
+//Copyright 2017 Bogdan Kornev.
+//
+//        Licensed under the Apache License, Version 2.0 (the "License");
+//        you may not use this file except in compliance with the License.
+//        You may obtain a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//        Unless required by applicable law or agreed to in writing, software
+//        distributed under the License is distributed on an "AS IS" BASIS,
+//        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//        See the License for the specific language governing permissions and
+//        limitations under the License.
+
+package com.example.android.bakingapp;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
@@ -13,6 +28,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +49,7 @@ public class StepActivity extends AppCompatActivity {
     StepFragmentPagerAdapter pagerAdapter;
     ViewPager viewPager;
     SimpleExoPlayer simpleExoPlayer;
+    static boolean isLandscape = false;
 
     static final String KEY_RECIPE = "recipe";
     static final String KEY_STEP = "step";
@@ -46,6 +63,9 @@ public class StepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
 
+        stepBar = findViewById(R.id.step_bar);
+        isLandscape = stepBar == null;
+
         if (savedInstanceState == null){
             selectedStep = getIntent().getParcelableExtra(DetailActivity.KEY_SELECTED_STEP);
             currentRecipe = getIntent().getParcelableExtra(DetailActivity.KEY_SELECTED_RECIPE);
@@ -56,15 +76,20 @@ public class StepActivity extends AppCompatActivity {
                     savedInstanceState, KEY_CURRENT_FRAGMENT);
 
         }
-
-
         steps = currentRecipe.getSteps();
 
-        stepBar = findViewById(R.id.step_bar);
-        stepBar.setStepsNumber(steps.size());
-        stepBar.getState()
-                .animationType(StepView.ANIMATION_NONE)
-                .commit();
+        if (!isLandscape){
+            stepBar.setStepsNumber(steps.size());
+            stepBar.getState()
+                    .animationType(StepView.ANIMATION_NONE)
+                    .commit();
+        }
+
+
+
+
+
+
 
         viewPager = findViewById(R.id.viewpager);
         pagerAdapter = new StepFragmentPagerAdapter(getSupportFragmentManager());
@@ -124,7 +149,9 @@ public class StepActivity extends AppCompatActivity {
                     setTitle(getPageTitle(position));
                 }
             });
-            stepBar.go(position, true);
+            if (!isLandscape){
+                stepBar.go(position, true);
+            }
             super.setPrimaryItem(container, position, object);
         }
 

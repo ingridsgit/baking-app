@@ -50,6 +50,7 @@ public class StepFragment extends Fragment  {
     private boolean isVisible = false;
     private boolean isCreated = false;
     private boolean playWhenReady = true;
+    private boolean isLandscape = false;
 
 
     public StepFragment(){
@@ -87,6 +88,11 @@ public class StepFragment extends Fragment  {
         View view = inflater.inflate(R.layout.step_fragment, container, false);
         descriptionView = view.findViewById(R.id.description_text_view);
         playerView = view.findViewById(R.id.player_view);
+        if (StepActivity.isLandscape){
+            descriptionView.setVisibility(View.GONE);
+        } else {
+            descriptionView.setVisibility(View.VISIBLE);
+        }
         if (currentStep != null){
             String uriValue = currentStep.getVideoUrl();
 

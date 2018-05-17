@@ -1,35 +1,49 @@
 package com.example.android.bakingapp;
 
+import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.os.Looper;
-import android.os.Parcelable;
-import android.support.v4.app.Fragment;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.bakingapp.Widget.BakingWidgetProvider;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private Recipe selectedRecipe;
     private Step selectedStep;
     private boolean isDualPane;
     private ListView ingredientListView;
     private ListView stepListView;
+    private SharedPreferences sharedPreferences;
     public static final String KEY_SELECTED_STEP = "selected_step";
     public static final String KEY_SELECTED_RECIPE = "selected_recipe";
     private static final String KEY_INGREDIENT_LIST_STATE = "ingredient_state";
     private static final String KEY_STEP_LIST_STATE = "step_list_state";
+    public static final String KEY_INGREDIENT_LIST = "ingredient_list";
+    public static final String KEY_RECIPE_NAME = "recipe_name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +52,13 @@ public class DetailActivity extends AppCompatActivity {
 
         Intent starterIntent = getIntent();
         selectedRecipe = starterIntent.getParcelableExtra(MainActivity.KEY_RECIPE);
+        setTitle(selectedRecipe.getName());
 
         View sideFragmentView = findViewById(R.id.side_step_fragment);
         isDualPane = sideFragmentView != null && sideFragmentView.getVisibility()== View.VISIBLE;
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         if (isDualPane && savedInstanceState == null){
             StepFragment stepFragment = StepFragment.newInstance(null);
@@ -55,11 +73,6 @@ public class DetailActivity extends AppCompatActivity {
         }
 
 
-//        else if (!isDualPane){
-//            Fragment stepFragment = getSupportFragmentManager().findFragmentById(R.id.side_step_fragment);
-//            getSupportFragmentManager().beginTransaction().remove(stepFragment).commit();
-//        }
-
         ImageView recipeImage = findViewById(R.id.recipe_image_view);
         String imagePath = selectedRecipe.getImagePath();
         if (imagePath == null || imagePath.isEmpty()) {
@@ -71,8 +84,8 @@ public class DetailActivity extends AppCompatActivity {
                     .into(recipeImage);
         }
 
-        TextView recipeName = findViewById(R.id.recipe_name_detail);
-        recipeName.setText(selectedRecipe.getName());
+//        TextView nameTextView = findViewById(R.id.recipe_name_detail);
+//        nameTextView.setText(selectedRecipe.getName());
 
         TextView servingTextView = findViewById(R.id.servings_text_view);
         servingTextView.setText(getString(R.string.servings, selectedRecipe.getServings() ));
@@ -116,9 +129,34 @@ public class DetailActivity extends AppCompatActivity {
         outState.putParcelable(KEY_INGREDIENT_LIST_STATE, ingredientListView.onSaveInstanceState());
         outState.putParcelable(KEY_STEP_LIST_STATE, stepListView.onSaveInstanceState());
         outState.putParcelable(KEY_SELECTED_STEP, selectedStep);
-
-
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.select_recipe, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId){
+            case R.id.selected:
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putStringSet(KEY_INGREDIENT_LIST, getIngredientStringList());
+                editor.putString(KEY_RECIPE_NAME, selectedRecipe.getName());
+                editor.commit();
+                return true;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -129,5 +167,37 @@ public class DetailActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals(KEY_INGREDIENT_LIST)) {
+            Intent intentUpdate = new Intent(this, BakingWidgetProvider.class);
+            intentUpdate.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BakingWidgetProvider.class));
+            intentUpdate.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+            sendBroadcast(intentUpdate);
+        }
+    }
+
+    private Set<String> getIngredientStringList(){
+        ArrayList<Ingredient> ingredientArrayList = selectedRecipe.getIngredients();
+        String ingredientString;
+        Set<String> ingredientStringSet = new HashSet<>();
+        for (Ingredient ingredient : ingredientArrayList) {
+            String name = ingredient.getName();
+            String quantity = String.valueOf(ingredient.getQuantity());
+            String measure = ingredient.getMeasure();
+            ingredientString = quantity + " " + measure + " " + name;
+            ingredientStringSet.add(ingredientString);
+        }
+        return ingredientStringSet;
     }
 }
