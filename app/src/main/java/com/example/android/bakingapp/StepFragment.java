@@ -43,14 +43,14 @@ public class StepFragment extends Fragment implements Player.EventListener {
     private static final String KEY_VIDEO_POSITION = "video_position";
     private static final String KEY_PLAY_WHEN_READY = "play_when_ready";
     private static final String KEY_URI_VALUE = "uri_value";
-    private static final String KEY_CURRENT_WINDOW = "current_window";
+//    private static final String KEY_CURRENT_WINDOW = "current_window";
 
     private Step currentStep;
     private PlayerView playerView;
     private TextView descriptionView;
     private boolean playWhenReady = true;
     private long playerPosition = 0;
-    private int currentWindowIndex;
+//    private int currentWindowIndex;
     private MediaSessionCompat mediaSessionCompat;
     private PlaybackStateCompat.Builder stateBuilder;
     public SimpleExoPlayer simpleExoPlayer;
@@ -83,11 +83,11 @@ public class StepFragment extends Fragment implements Player.EventListener {
 
     }
 
-    static StepFragment newInstance(Step selectedStep, int position){
+    static StepFragment newInstance(Step selectedStep){
         StepFragment fragment = new StepFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_STEP, selectedStep);
-        bundle.putInt(KEY_CURRENT_WINDOW, position);
+//        bundle.putInt(KEY_CURRENT_WINDOW, position);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -97,10 +97,10 @@ public class StepFragment extends Fragment implements Player.EventListener {
         super.onCreate(savedInstanceState);
         if (getArguments() != null){
             currentStep = getArguments().getParcelable(KEY_STEP);
-            currentWindowIndex = getArguments().getInt(KEY_CURRENT_WINDOW);
+//            currentWindowIndex = getArguments().getInt(KEY_CURRENT_WINDOW);
         } else if (savedInstanceState != null){
             currentStep = savedInstanceState.getParcelable(KEY_STEP);
-            currentWindowIndex = savedInstanceState.getInt(KEY_CURRENT_WINDOW);
+//            currentWindowIndex = savedInstanceState.getInt(KEY_CURRENT_WINDOW);
         }
         if (currentStep != null){
             uriValue = currentStep.getVideoUrl();
@@ -133,8 +133,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
                 playerView.setVisibility(View.VISIBLE);
             }
         }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     AudioAttributes audioAttributes = new AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_MEDIA)
                             .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
@@ -152,6 +151,8 @@ public class StepFragment extends Fragment implements Player.EventListener {
         }
         return view;
     }
+
+
 
     @Override
     public void onStart() {
@@ -178,7 +179,6 @@ public class StepFragment extends Fragment implements Player.EventListener {
         super.onPause();
         if (Util.SDK_INT <= 23){
             releasePlayer();
-
         }
     }
 
@@ -194,21 +194,15 @@ public class StepFragment extends Fragment implements Player.EventListener {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
-//        if (!isVisibleToUser && simpleExoPlayer != null){
-//            simpleExoPlayer.setPlayWhenReady(false);
-//        }
+        if (!isVisibleToUser && simpleExoPlayer != null){
+//            playWhenReady = simpleExoPlayer.getPlayWhenReady();
+            simpleExoPlayer.setPlayWhenReady(false);
+        }
         if (isVisibleToUser && simpleExoPlayer != null){
             requestAudioFocus();
             simpleExoPlayer.setPlayWhenReady(playWhenReady && isFocusGranted);
         }
     }
-
-    //        @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//            ExoPlayerHandler.getExoPlayerHandler().releasePlayer();
-//
-//    }
 
     protected void releasePlayer(){
         if (simpleExoPlayer != null){
@@ -222,8 +216,6 @@ public class StepFragment extends Fragment implements Player.EventListener {
     }
 
 
-
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(KEY_STEP, currentStep);
@@ -231,7 +223,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
         if (simpleExoPlayer != null){
             outState.putLong(KEY_VIDEO_POSITION, simpleExoPlayer.getCurrentPosition());
             outState.putBoolean(KEY_PLAY_WHEN_READY, simpleExoPlayer.getPlayWhenReady());
-            outState.putInt(KEY_CURRENT_WINDOW, simpleExoPlayer.getCurrentWindowIndex());
+//            outState.putInt(KEY_CURRENT_WINDOW, simpleExoPlayer.getCurrentWindowIndex());
             outState.putString(KEY_URI_VALUE, uriValue);
         }
 
@@ -245,7 +237,7 @@ public class StepFragment extends Fragment implements Player.EventListener {
              playerPosition = savedInstanceState.getLong(KEY_VIDEO_POSITION);
              playWhenReady = savedInstanceState.getBoolean(KEY_PLAY_WHEN_READY);
              uriValue = savedInstanceState.getString(KEY_URI_VALUE);
-             currentWindowIndex = savedInstanceState.getInt(KEY_CURRENT_WINDOW);
+//             currentWindowIndex = savedInstanceState.getInt(KEY_CURRENT_WINDOW);
         }
     }
 
@@ -278,12 +270,16 @@ public class StepFragment extends Fragment implements Player.EventListener {
             mediaSessionCompat.setActive(true);
         }
 
-//        if (isVisible){
-//            Toast.makeText(getContext(), "getuservisiblehint", Toast.LENGTH_SHORT).show();
+//        if (isVisible) {
+//            Toast.makeText(getContext(), "setupplayer, isvisible", Toast.LENGTH_SHORT).show();
 
-            simpleExoPlayer.setPlayWhenReady(isFocusGranted && playWhenReady);
-            simpleExoPlayer.seekTo(currentWindowIndex,playerPosition);
+
+            requestAudioFocus();
+
 //        }
+            simpleExoPlayer.setPlayWhenReady(isFocusGranted && playWhenReady);
+            simpleExoPlayer.seekTo(playerPosition);
+
     }
 
 

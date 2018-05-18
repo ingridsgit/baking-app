@@ -58,8 +58,6 @@ public class StepActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
 
@@ -76,8 +74,8 @@ public class StepActivity extends AppCompatActivity {
                     savedInstanceState, KEY_CURRENT_FRAGMENT);
 
         }
-        steps = currentRecipe.getSteps();
 
+        steps = currentRecipe.getSteps();
         if (!isLandscape){
             stepBar.setStepsNumber(steps.size());
             stepBar.getState()
@@ -108,8 +106,10 @@ public class StepActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    public class StepFragmentPagerAdapter extends FragmentPagerAdapter {
 
+
+
+    public class StepFragmentPagerAdapter extends FragmentPagerAdapter {
 
         private StepFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -118,7 +118,7 @@ public class StepActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             selectedStep = steps.get(position);
-            return StepFragment.newInstance(selectedStep, position);
+            return StepFragment.newInstance(selectedStep);
         }
 
         @Override
@@ -126,14 +126,11 @@ public class StepActivity extends AppCompatActivity {
             return steps.size();
         }
 
-
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
             return steps.get(position).getShortDesc();
         }
-
-
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
@@ -155,18 +152,6 @@ public class StepActivity extends AppCompatActivity {
             }
             super.setPrimaryItem(container, position, object);
         }
-
-//        @Override
-//        public void destroyItem(ViewGroup container, int position, Object object) {
-//            super.destroyItem(container, position, object);
-//            if (audioFocusRequest != null) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    audioManager.abandonAudioFocusRequest(audioFocusRequest.build());
-//                } else {
-//                    audioManager.abandonAudioFocus(audioFocusChangeListener);
-//                }
-//            }
-//        }
 
 
     }
