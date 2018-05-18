@@ -61,12 +61,12 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         if (isDualPane && savedInstanceState == null){
-            StepFragment stepFragment = StepFragment.newInstance(null);
+            StepFragment stepFragment = StepFragment.newInstance(null, 0);
             getSupportFragmentManager().beginTransaction().add(R.id.side_step_fragment, stepFragment).commit();
         } else if (savedInstanceState != null){
             selectedStep = savedInstanceState.getParcelable(KEY_SELECTED_STEP);
            if (isDualPane){
-                StepFragment stepFragment = StepFragment.newInstance(selectedStep);
+                StepFragment stepFragment = StepFragment.newInstance(selectedStep, selectedStep.getId());
                 getSupportFragmentManager().beginTransaction().replace(R.id.side_step_fragment, stepFragment).commit();
             }
 
@@ -109,7 +109,7 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     selectedStep = steps.get(i);
                     if (isDualPane){
-                        StepFragment stepFragment = StepFragment.newInstance(selectedStep);
+                        StepFragment stepFragment = StepFragment.newInstance(selectedStep, i);
                         getSupportFragmentManager().beginTransaction().replace(R.id.side_step_fragment, stepFragment).commit();
                     } else {
                         Intent stepDetails = new Intent(getApplicationContext(), StepActivity.class);

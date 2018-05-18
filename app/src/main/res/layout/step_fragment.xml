@@ -22,6 +22,7 @@
         android:layout_weight="1"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
+        android:padding="@dimen/padding"
         android:id="@+id/description_text_view"/>
 
 </LinearLayout>

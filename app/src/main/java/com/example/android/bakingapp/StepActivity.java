@@ -85,18 +85,19 @@ public class StepActivity extends AppCompatActivity {
                     .commit();
         }
 
-
-
-
-
-
-
         viewPager = findViewById(R.id.viewpager);
         pagerAdapter = new StepFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(selectedStep.getId());
 
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (StepFragment.isFocusGranted){
+            StepFragment.abandonAudioFocus();
+        }
     }
 
     @Override
@@ -117,7 +118,7 @@ public class StepActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             selectedStep = steps.get(position);
-            return StepFragment.newInstance(selectedStep);
+            return StepFragment.newInstance(selectedStep, position);
         }
 
         @Override

@@ -34,7 +34,7 @@
         android:layout_weight="6"
         android:id="@+id/step_list"
         android:background="@color/grey_background"
-        android:padding="8dp">
+        android:padding="@dimen/padding">
 
     </ListView>
 

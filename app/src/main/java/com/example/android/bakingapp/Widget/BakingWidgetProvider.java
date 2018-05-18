@@ -42,7 +42,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
                 openActivityIntent.putExtra(DetailActivity.KEY_RECIPE_NAME, recipeName);
                 PendingIntent pendingIntent = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    pendingIntent = PendingIntent.getForegroundService(context, 0, openActivityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    pendingIntent = PendingIntent.getService(context, 0, openActivityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                 }
                 views.setOnClickPendingIntent(R.id.widget_recipe_text_view, pendingIntent);
             } else {

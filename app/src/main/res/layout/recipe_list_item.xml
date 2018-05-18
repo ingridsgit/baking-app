@@ -4,7 +4,7 @@
     android:layout_width="@dimen/grid_column_width"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="@dimen/padding">
+    android:padding="@dimen/padding_list_item">
 
     <ImageView
         android:id="@+id/recipe_image"

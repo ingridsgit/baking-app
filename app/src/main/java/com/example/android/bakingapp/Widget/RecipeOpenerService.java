@@ -31,15 +31,12 @@ public class RecipeOpenerService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Log.d("RECIPE_OPENER", "i am called");
         if (intent != null){
 
             String action = intent.getAction();
 
-
             if (action.equals(ACTION_OPEN_RECIPE)){
                 final String recipeName = intent.getStringExtra(DetailActivity.KEY_RECIPE_NAME);
-                toast(getText(R.string.opening) + " " + recipeName);
                 final Recipe recipe = NetworkUtils.getSingleRecipeFromWeb(getApplicationContext(), recipeName);
                 if (recipe != null){
                     Intent openIntent = new Intent(getApplicationContext(), DetailActivity.class);

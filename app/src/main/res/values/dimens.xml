@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="padding">2dp</dimen>
+    <dimen name="padding_list_item">2dp</dimen>
     <dimen name="grid_column_width">350dp</dimen>
     <dimen name="image_size">100dp</dimen>
+    <dimen name="padding">8dp</dimen>
 
     <!--
 Refer to App Widget Documentation for margin information
