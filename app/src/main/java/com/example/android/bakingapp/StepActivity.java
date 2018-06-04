@@ -15,23 +15,15 @@
 //        limitations under the License.
 
 package com.example.android.bakingapp;
-import android.media.AudioAttributes;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
-import android.os.Build;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.shuhart.stepview.StepView;
@@ -43,26 +35,21 @@ public class StepActivity extends AppCompatActivity {
 
     Recipe currentRecipe;
     Step selectedStep;
-    StepFragment currentFragment;
-    List<Step> steps;
+    ArrayListFragment currentFragment;
+    ArrayList<Step> steps;
     StepView stepBar;
     StepFragmentPagerAdapter pagerAdapter;
     ViewPager viewPager;
-    SimpleExoPlayer simpleExoPlayer;
     static boolean isLandscape = false;
 
     static final String KEY_RECIPE = "recipe";
     static final String KEY_STEP = "step";
     static final String KEY_CURRENT_FRAGMENT = "current_fragment";
-    static final String KEY_POSITION = "position";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
-
-        stepBar = findViewById(R.id.step_bar);
-        isLandscape = stepBar == null;
 
         if (savedInstanceState == null){
             selectedStep = getIntent().getParcelableExtra(DetailActivity.KEY_SELECTED_STEP);
@@ -70,11 +57,14 @@ public class StepActivity extends AppCompatActivity {
         } else {
             selectedStep = savedInstanceState.getParcelable(KEY_STEP);
             currentRecipe = savedInstanceState.getParcelable(KEY_RECIPE);
-            currentFragment = (StepFragment) getSupportFragmentManager().getFragment(
+            currentFragment = (ArrayListFragment) getSupportFragmentManager().getFragment(
                     savedInstanceState, KEY_CURRENT_FRAGMENT);
 
         }
 
+        //find out if the device is in landscape mode
+        stepBar = findViewById(R.id.step_bar);
+        isLandscape = stepBar == null;
         steps = currentRecipe.getSteps();
         if (!isLandscape){
             stepBar.setStepsNumber(steps.size());
@@ -83,18 +73,19 @@ public class StepActivity extends AppCompatActivity {
                     .commit();
         }
 
-        viewPager = findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.view_pager);
         pagerAdapter = new StepFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(selectedStep.getId());
 
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (StepFragment.isFocusGranted){
-            StepFragment.abandonAudioFocus();
+        if (ArrayListFragment.isFocusGranted){
+            ArrayListFragment.abandonAudioFocus();
         }
     }
 
@@ -102,14 +93,20 @@ public class StepActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_RECIPE, currentRecipe);
         outState.putParcelable(KEY_STEP, selectedStep);
-        getSupportFragmentManager().putFragment(outState, KEY_CURRENT_FRAGMENT, currentFragment);
+        if (currentFragment.isAdded()){
+            getSupportFragmentManager().putFragment(outState, KEY_CURRENT_FRAGMENT, currentFragment);
+        }
+
         super.onSaveInstanceState(outState);
     }
 
 
+    public List<Step> getSteps() {
+        return steps;
+    }
 
 
-    public class StepFragmentPagerAdapter extends FragmentPagerAdapter {
+    public class StepFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         private StepFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -117,8 +114,7 @@ public class StepActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            selectedStep = steps.get(position);
-            return StepFragment.newInstance(selectedStep);
+            return ArrayListFragment.newInstance(position, steps);
         }
 
         @Override
@@ -134,7 +130,7 @@ public class StepActivity extends AppCompatActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            StepFragment thisFragment = (StepFragment)super.instantiateItem(container, position);
+            ArrayListFragment thisFragment = (ArrayListFragment) super.instantiateItem(container, position);
             currentFragment = thisFragment;
             return thisFragment;
         }
@@ -154,5 +150,8 @@ public class StepActivity extends AppCompatActivity {
         }
 
 
+
+
     }
+
 }

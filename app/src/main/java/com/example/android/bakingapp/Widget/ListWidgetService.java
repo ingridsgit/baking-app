@@ -1,4 +1,4 @@
-package com.example.android.bakingapp.Widget;
+package com.example.android.bakingapp.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ public class ListWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+
         return new ListRemoteViewsFactory(this.getApplicationContext());
     }
 }
@@ -28,7 +29,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private Context context;
     private Set<String> ingredientStringSet;
 
-    public ListRemoteViewsFactory(Context context){
+    ListRemoteViewsFactory(Context context){
         this.context = context;
     }
 

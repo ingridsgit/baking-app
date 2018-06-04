@@ -1,16 +1,10 @@
 package com.example.android.bakingapp;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.ArrayList;
-
-/**
- * Created by Ingrid on 3/11/2018.
- */
 
 public class Recipe implements Parcelable{
     private int id;

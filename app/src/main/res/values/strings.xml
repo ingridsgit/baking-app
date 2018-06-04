@@ -11,4 +11,5 @@
     <string name="opening">Opening</string>
     <string name="error">Could not open the recipe</string>
     <string name="recipe_picture">Picture of the recipe</string>
+
 </resources>

@@ -2,19 +2,14 @@ package com.example.android.bakingapp;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-/**
- * Created by Ingrid on 3/11/2018.
- */
 
 public class Ingredient implements Parcelable{
-    private int quantity;
+    private double quantity;
 
     private String measure;
     private String name;
 
-    public Ingredient(int quantity, String measure, String name){
+    public Ingredient(double quantity, String measure, String name){
         this.quantity = quantity;
         this.measure = measure;
         this.name = name;
@@ -45,13 +40,13 @@ public class Ingredient implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(quantity);
+        parcel.writeDouble(quantity);
         parcel.writeString(measure);
         parcel.writeString(name);
 
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 

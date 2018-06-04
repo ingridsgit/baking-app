@@ -9,12 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Ingrid on 3/25/2018.
- */
 
 public class IngredientAdapter extends ArrayAdapter<Ingredient>{
 
@@ -30,21 +26,21 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient>{
         }
         Ingredient currentIngredient = getItem(position);
 
-        TextView nameTextView = convertView.findViewById(R.id.ingredient_name_text_view);
-        nameTextView.setText(currentIngredient.getName());
+        if (currentIngredient != null) {
 
-        TextView quantityView = convertView.findViewById(R.id.ingredient_quantity_text_view);
-        quantityView.setText(String.valueOf(currentIngredient.getQuantity()));
+            TextView nameTextView = convertView.findViewById(R.id.ingredient_name_text_view);
+            nameTextView.setText(currentIngredient.getName());
 
-        TextView measureTextView = convertView.findViewById(R.id.ingredient_measure_text_view);
-        String measure = currentIngredient.getMeasure();
-        if (measure.equalsIgnoreCase("unit")){
-            measureTextView.setVisibility(View.GONE);
+            TextView quantityView = convertView.findViewById(R.id.ingredient_quantity_text_view);
+            quantityView.setText(String.valueOf(currentIngredient.getQuantity()));
+
+            TextView measureTextView = convertView.findViewById(R.id.ingredient_measure_text_view);
+            String measure = currentIngredient.getMeasure();
+            if (measure == null || measure.equalsIgnoreCase("unit")) {
+                measureTextView.setVisibility(View.GONE);
+            }
+            measureTextView.setText(measure);
         }
-        measureTextView.setText(measure);
-
-//        TODO  convert to string list
-
         return convertView;
     }
 }

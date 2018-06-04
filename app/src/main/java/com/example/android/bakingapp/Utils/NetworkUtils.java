@@ -1,12 +1,9 @@
-package com.example.android.bakingapp.Utils;
+package com.example.android.bakingapp.utils;
 
 import android.content.Context;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.android.bakingapp.Ingredient;
-import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.Recipe;
 import com.example.android.bakingapp.Step;
 
@@ -22,11 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.logging.Handler;
 
-/**
- * Created by Ingrid on 3/10/2018.
- */
 
 public final class NetworkUtils {
 
@@ -46,9 +39,10 @@ public final class NetworkUtils {
         private static final String KEY_VIDEO_URL = "videoURL";
         private static final String KEY_THUMBNAIL_URL = "thumbnailUrl";
 
-        public static Recipe getSingleRecipeFromWeb(Context context, String recipeName){
-            URL url = buildUrl(context);
-            InputStream inputStream = makeHttpRequest(url, context);
+        //get a single recipe from the web
+        public static Recipe getSingleRecipeFromWeb(String recipeName){
+            URL url = buildUrl();
+            InputStream inputStream = makeHttpRequest(url);
             if (inputStream != null){
                 String response = readFromStream(inputStream);
                 if (response != null) {
@@ -73,9 +67,10 @@ public final class NetworkUtils {
             } return null;
         }
 
-        public static ArrayList<Recipe> getDataFromWeb(Context context) {
-            URL url = buildUrl(context);
-            InputStream inputStream = makeHttpRequest(url, context);
+        //get all the recipes from the web
+        public static ArrayList<Recipe> getDataFromWeb() {
+            URL url = buildUrl();
+            InputStream inputStream = makeHttpRequest(url);
             if (inputStream != null){
                 String response = readFromStream(inputStream);
                 return extractRecipesFromJson(response);
@@ -83,16 +78,7 @@ public final class NetworkUtils {
         }
 
 
-//        static ArrayList<Step> getRecipeSteps(Context context, int recipeId) {
-//            URL url = buildUrl(context);
-//            InputStream inputStream = makeHttpRequest(url);
-//            if (inputStream != null){
-//                String response = readFromStream(inputStream);
-//                return extractStepsFromJson(response, recipeId);
-//            } else return null;
-//        }
-
-        private static URL buildUrl(Context context) {
+        private static URL buildUrl() {
             URL url = null;
             try {
                 url = new URL(URI_BASE);
@@ -103,7 +89,7 @@ public final class NetworkUtils {
         }
 
 
-        private static InputStream makeHttpRequest(URL url, Context context) {
+        private static InputStream makeHttpRequest(URL url) {
             HttpURLConnection httpURLConnection;
             InputStream inputStream = null;
             int responseCode;

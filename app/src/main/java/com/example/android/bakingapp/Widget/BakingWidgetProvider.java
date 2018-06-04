@@ -1,4 +1,4 @@
-package com.example.android.bakingapp.Widget;
+package com.example.android.bakingapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -6,19 +6,12 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.example.android.bakingapp.DetailActivity;
-import com.example.android.bakingapp.MainActivity;
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.Recipe;
-import com.example.android.bakingapp.Utils.NetworkUtils;
 
 /**
  * Implementation of App Widget functionality.
@@ -29,14 +22,20 @@ public class BakingWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         for (int appWidgetId : appWidgetIds) {
 
+            //get the name of the recipe that was selected for the widget
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             String recipeName = sharedPreferences.getString(DetailActivity.KEY_RECIPE_NAME, null);
+
+            // populate the views
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
             if (recipeName != null){
+                views.setViewVisibility(R.id.widget_recipe_text_view, View.VISIBLE);
                 views.setTextViewText(R.id.widget_recipe_text_view, recipeName);
+
+                // open DetailActivity with the correct Recipe
                 Intent openActivityIntent = new Intent(context, RecipeOpenerService.class);
                 openActivityIntent.setAction(RecipeOpenerService.ACTION_OPEN_RECIPE);
                 openActivityIntent.putExtra(DetailActivity.KEY_RECIPE_NAME, recipeName);
@@ -51,9 +50,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
 
             Intent adapterIntent = new Intent(context, ListWidgetService.class);
             views.setRemoteAdapter(R.id.widget_list_view, adapterIntent);
-            views.setEmptyView(R.id.widget_list_view, R.id.empty_view);
-
-
+            views.setEmptyView(R.id.widget_list_view, R.id.widget_empty_view);
 
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list_view);
 

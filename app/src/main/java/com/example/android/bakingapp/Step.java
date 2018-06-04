@@ -4,9 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-/**
- * Created by Ingrid on 3/11/2018.
- */
 
 public class Step implements Parcelable{
 
