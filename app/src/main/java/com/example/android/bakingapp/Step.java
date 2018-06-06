@@ -2,18 +2,17 @@ package com.example.android.bakingapp;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 
-public class Step implements Parcelable{
+public class Step implements Parcelable {
 
-    private int id;
-    private String shortDesc;
-    private String description;
-    private String videoUrl;
-    private String thumbnailUrl;
+    private final int id;
+    private final String shortDesc;
+    private final String description;
+    private final String videoUrl;
+    private final String thumbnailUrl;
 
-    public Step(int id, String shortDesc, String description, String videoUrl, String thumbnailUrl){
+    public Step(int id, String shortDesc, String description, String videoUrl, String thumbnailUrl) {
         this.id = id;
         this.shortDesc = shortDesc;
         this.description = description;
@@ -21,7 +20,7 @@ public class Step implements Parcelable{
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    protected Step(Parcel in) {
+    private Step(Parcel in) {
         id = in.readInt();
         shortDesc = in.readString();
         description = in.readString();

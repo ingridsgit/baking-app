@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -26,10 +25,10 @@ public class ListWidgetService extends RemoteViewsService {
 
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private Context context;
+    private final Context context;
     private Set<String> ingredientStringSet;
 
-    ListRemoteViewsFactory(Context context){
+    ListRemoteViewsFactory(Context context) {
         this.context = context;
     }
 
@@ -52,7 +51,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        if (ingredientStringSet == null){
+        if (ingredientStringSet == null) {
             return 0;
         } else {
             return ingredientStringSet.size();

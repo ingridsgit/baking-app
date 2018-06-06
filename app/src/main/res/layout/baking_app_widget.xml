@@ -1,19 +1,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin"
-    android:background="@color/grey_background">
+    android:background="@color/grey_background"
+    android:padding="@dimen/widget_margin">
 
 
     <TextView
         android:id="@+id/widget_recipe_text_view"
+        style="@style/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:textColor="@android:color/black"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_margin="@dimen/padding" />
 
 
     <ListView
@@ -21,19 +19,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/widget_recipe_text_view"
-        android:padding="@dimen/widget_margin"
-        />
+        android:layout_margin="@dimen/widget_margin" />
 
     <TextView
+        android:id="@+id/widget_empty_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/widget_empty_view"
-        android:layout_gravity="center"
-        android:text="@string/choose_recipe"
         android:layout_alignParentStart="true"
-        android:background="@color/grey_background"
-        android:padding="@dimen/padding"/>
-
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/padding"
+        android:text="@string/choose_recipe" />
 
 
 </RelativeLayout>

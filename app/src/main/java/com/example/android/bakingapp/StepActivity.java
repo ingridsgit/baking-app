@@ -17,6 +17,7 @@
 package com.example.android.bakingapp;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +26,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.shuhart.stepview.StepView;
 
 import java.util.ArrayList;
@@ -33,25 +33,25 @@ import java.util.List;
 
 public class StepActivity extends AppCompatActivity {
 
-    Recipe currentRecipe;
-    Step selectedStep;
-    ArrayListFragment currentFragment;
-    ArrayList<Step> steps;
-    StepView stepBar;
-    StepFragmentPagerAdapter pagerAdapter;
-    ViewPager viewPager;
+    private Recipe currentRecipe;
+    private Step selectedStep;
+    private ArrayListFragment currentFragment;
+    private ArrayList<Step> steps;
+    private StepView stepBar;
+    private StepFragmentPagerAdapter pagerAdapter;
+    private ViewPager viewPager;
     static boolean isLandscape = false;
 
-    static final String KEY_RECIPE = "recipe";
-    static final String KEY_STEP = "step";
-    static final String KEY_CURRENT_FRAGMENT = "current_fragment";
+    private static final String KEY_RECIPE = "recipe";
+    private static final String KEY_STEP = "step";
+    private static final String KEY_CURRENT_FRAGMENT = "current_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             selectedStep = getIntent().getParcelableExtra(DetailActivity.KEY_SELECTED_STEP);
             currentRecipe = getIntent().getParcelableExtra(DetailActivity.KEY_SELECTED_RECIPE);
         } else {
@@ -66,7 +66,7 @@ public class StepActivity extends AppCompatActivity {
         stepBar = findViewById(R.id.step_bar);
         isLandscape = stepBar == null;
         steps = currentRecipe.getSteps();
-        if (!isLandscape){
+        if (!isLandscape) {
             stepBar.setStepsNumber(steps.size());
             stepBar.getState()
                     .animationType(StepView.ANIMATION_NONE)
@@ -84,7 +84,7 @@ public class StepActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (ArrayListFragment.isFocusGranted){
+        if (ArrayListFragment.isFocusGranted) {
             ArrayListFragment.abandonAudioFocus();
         }
     }
@@ -93,7 +93,7 @@ public class StepActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_RECIPE, currentRecipe);
         outState.putParcelable(KEY_STEP, selectedStep);
-        if (currentFragment.isAdded()){
+        if (currentFragment.isAdded()) {
             getSupportFragmentManager().putFragment(outState, KEY_CURRENT_FRAGMENT, currentFragment);
         }
 
@@ -101,12 +101,7 @@ public class StepActivity extends AppCompatActivity {
     }
 
 
-    public List<Step> getSteps() {
-        return steps;
-    }
-
-
-    public class StepFragmentPagerAdapter extends FragmentStatePagerAdapter {
+    class StepFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         private StepFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -128,6 +123,7 @@ public class StepActivity extends AppCompatActivity {
             return steps.get(position).getShortDesc();
         }
 
+        @NonNull
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             ArrayListFragment thisFragment = (ArrayListFragment) super.instantiateItem(container, position);
@@ -143,13 +139,11 @@ public class StepActivity extends AppCompatActivity {
                     setTitle(getPageTitle(position));
                 }
             });
-            if (!isLandscape){
+            if (!isLandscape) {
                 stepBar.go(position, true);
             }
             super.setPrimaryItem(container, position, object);
         }
-
-
 
 
     }

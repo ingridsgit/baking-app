@@ -17,8 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -39,16 +37,15 @@ import com.google.android.exoplayer2.util.Util;
 
 import java.util.ArrayList;
 
-public class ArrayListFragment extends ListFragment implements Player.EventListener{
+public class ArrayListFragment extends ListFragment implements Player.EventListener {
 
-    int position;
+    private int position;
     private ArrayList<Step> steps;
-    private String[] descriptions;
     private Step currentStep;
     private String uriValue;
     private PlayerView playerView;
     private FrameLayout descriptionView;
-    public SimpleExoPlayer simpleExoPlayer;
+    private SimpleExoPlayer simpleExoPlayer;
     private static AudioManager audioManager;
     private static final String KEY_POSITION = "position";
     private static final String KEY_STEPS = "steps";
@@ -64,17 +61,17 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     private static int focus;
     static boolean isFocusGranted = false;
     private boolean isVisible;
-    private static AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+    private static final AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int i) {
-                if (i == AudioManager.AUDIOFOCUS_LOSS || i == AudioManager.
-                        AUDIOFOCUS_LOSS_TRANSIENT ||
-                        i == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                    isFocusGranted = false;
-                } else if (focus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-                    isFocusGranted = true;
-                }
+            if (i == AudioManager.AUDIOFOCUS_LOSS || i == AudioManager.
+                    AUDIOFOCUS_LOSS_TRANSIENT ||
+                    i == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                isFocusGranted = false;
+            } else if (focus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                isFocusGranted = true;
             }
+        }
     };
 
     static ArrayListFragment newInstance(int position, ArrayList<Step> steps) {
@@ -100,30 +97,29 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null){
+        if (getArguments() != null) {
             steps = getArguments().getParcelableArrayList(KEY_STEPS);
-            if (getArguments().containsKey(KEY_POSITION)){
+            if (getArguments().containsKey(KEY_POSITION)) {
                 position = getArguments().getInt(KEY_POSITION);
                 currentStep = steps.get(position);
             }
 
-        } else if (savedInstanceState != null){
+        } else if (savedInstanceState != null) {
             steps = savedInstanceState.getParcelableArrayList(KEY_STEPS);
             position = savedInstanceState.getInt(KEY_POSITION);
             currentStep = steps.get(position);
-        }
-        else {
+        } else {
             currentStep = null;
         }
 
-        if (currentStep != null){
+        if (currentStep != null) {
             uriValue = currentStep.getVideoUrl();
         }
 
         try {
             getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
             audioManager = (AudioManager) getContext().getSystemService(getContext().AUDIO_SERVICE);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -165,7 +161,7 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
                     .setOnAudioFocusChangeListener(audioFocusChangeListener);
         }
 
-        if (currentStep == null){
+        if (currentStep == null) {
             playerView.setVisibility(View.GONE);
         }
         return view;
@@ -174,15 +170,16 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (currentStep != null){
+        String[] descriptions;
+        if (currentStep != null) {
             descriptions = new String[]{currentStep.getDescription()};
         } else {
             descriptions = new String[]{};
         }
 
 
-        if (getActivity() != null){
-            setListAdapter( new ArrayAdapter<>(getActivity(),
+        if (getActivity() != null) {
+            setListAdapter(new ArrayAdapter<>(getActivity(),
                     android.R.layout.simple_list_item_1, descriptions));
         }
     }
@@ -190,8 +187,8 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23){
-            if (uriValue != null && !uriValue.isEmpty()){
+        if (Util.SDK_INT > 23) {
+            if (uriValue != null && !uriValue.isEmpty()) {
                 setupPlayer();
             }
         }
@@ -200,8 +197,8 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     @Override
     public void onResume() {
         super.onResume();
-        if (Util.SDK_INT <= 23){
-            if (uriValue != null && !uriValue.isEmpty()){
+        if (Util.SDK_INT <= 23) {
+            if (uriValue != null && !uriValue.isEmpty()) {
                 setupPlayer();
             }
         }
@@ -210,7 +207,7 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     @Override
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT <= 23){
+        if (Util.SDK_INT <= 23) {
             releasePlayer();
         }
     }
@@ -218,12 +215,12 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > 23){
+        if (Util.SDK_INT > 23) {
             releasePlayer();
         }
     }
 
-    public void setupPlayer(){
+    private void setupPlayer() {
         if (simpleExoPlayer == null) {
             Uri videoUri = Uri.parse(uriValue);
             TrackSelector trackSelector = new DefaultTrackSelector();
@@ -249,9 +246,8 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
             mediaSessionCompat.setCallback(new ArrayListFragment.CallbackSession());
             mediaSessionCompat.setActive(true);
         }
-        Log.d("ARRAY LIST OOOO", String.valueOf(isVisible));
 
-        if (isVisible || DetailActivity.isDualPane){
+        if (isVisible || DetailActivity.isDualPane) {
             requestAudioFocus();
         }
 
@@ -260,36 +256,36 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
 
     }
 
-    protected void releasePlayer(){
-        if (simpleExoPlayer != null){
+    private void releasePlayer() {
+        if (simpleExoPlayer != null) {
             simpleExoPlayer.stop();
             simpleExoPlayer.release();
             simpleExoPlayer = null;
         }
-        if (mediaSessionCompat != null){
+        if (mediaSessionCompat != null) {
             mediaSessionCompat.setActive(false);
         }
     }
 
-    protected static void requestAudioFocus(){
-        if (!isFocusGranted){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+    private static void requestAudioFocus() {
+        if (!isFocusGranted) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 focus = audioManager.requestAudioFocus(audioFocusRequest.build());
-        } else {
-            focus = audioManager.requestAudioFocus(audioFocusChangeListener,
-                    AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN);
+            } else {
+                focus = audioManager.requestAudioFocus(audioFocusChangeListener,
+                        AudioManager.STREAM_MUSIC,
+                        AudioManager.AUDIOFOCUS_GAIN);
             }
         }
 
         isFocusGranted = focus == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
 
-    static void abandonAudioFocus(){
+    static void abandonAudioFocus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
             audioManager.abandonAudioFocusRequest(audioFocusRequest.build());
             isFocusGranted = false;
-        } else if (audioFocusChangeListener != null){
+        } else if (audioFocusChangeListener != null) {
             audioManager.abandonAudioFocus(audioFocusChangeListener);
         }
     }
@@ -298,11 +294,11 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelableArrayList(KEY_STEPS, steps);
-        if (currentStep != null){
+        if (currentStep != null) {
             outState.putInt(KEY_POSITION, position);
         }
 
-        if (simpleExoPlayer != null){
+        if (simpleExoPlayer != null) {
             outState.putLong(KEY_VIDEO_POSITION, simpleExoPlayer.getCurrentPosition());
             outState.putBoolean(KEY_PLAY_WHEN_READY, simpleExoPlayer.getPlayWhenReady());
             outState.putString(KEY_URI_VALUE, uriValue);
@@ -314,7 +310,7 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             playerPosition = savedInstanceState.getLong(KEY_VIDEO_POSITION);
             playWhenReady = savedInstanceState.getBoolean(KEY_PLAY_WHEN_READY);
             uriValue = savedInstanceState.getString(KEY_URI_VALUE);
@@ -325,11 +321,11 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
-        if (!isVisibleToUser && simpleExoPlayer != null){
+        if (!isVisibleToUser && simpleExoPlayer != null) {
             playWhenReady = simpleExoPlayer.getPlayWhenReady();
             simpleExoPlayer.setPlayWhenReady(false);
         }
-        if (isVisibleToUser && simpleExoPlayer != null){
+        if (isVisibleToUser && simpleExoPlayer != null) {
             requestAudioFocus();
             simpleExoPlayer.setPlayWhenReady(playWhenReady && isFocusGranted);
         }
@@ -353,10 +349,10 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if (playbackState == Player.STATE_READY && playWhenReady){
+        if (playbackState == Player.STATE_READY && playWhenReady) {
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, simpleExoPlayer.getCurrentPosition(), 1f);
             requestAudioFocus();
-        } else if (playbackState == Player.STATE_READY){
+        } else if (playbackState == Player.STATE_READY) {
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, simpleExoPlayer.getCurrentPosition(), 1f);
         }
         mediaSessionCompat.setPlaybackState(stateBuilder.build());
@@ -392,7 +388,7 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
 
     }
 
-    class CallbackSession extends MediaSessionCompat.Callback{
+    class CallbackSession extends MediaSessionCompat.Callback {
         @Override
         public void onPlay() {
             super.onPlay();
@@ -411,9 +407,6 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
             simpleExoPlayer.seekTo(0);
         }
     }
-
-
-
 
 }
 

@@ -5,13 +5,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-
-
 import com.example.android.bakingapp.utils.NetworkUtils;
 
 import java.util.ArrayList;
 
-public class RecipeAsyncLoader extends AsyncTaskLoader<ArrayList<Recipe>> {
+class RecipeAsyncLoader extends AsyncTaskLoader<ArrayList<Recipe>> {
 
     public RecipeAsyncLoader(@NonNull Context context) {
         super(context);

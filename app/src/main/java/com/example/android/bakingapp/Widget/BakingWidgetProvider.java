@@ -31,7 +31,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
 
             // populate the views
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
-            if (recipeName != null){
+            if (recipeName != null) {
                 views.setViewVisibility(R.id.widget_recipe_text_view, View.VISIBLE);
                 views.setTextViewText(R.id.widget_recipe_text_view, recipeName);
 
@@ -41,7 +41,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
                 openActivityIntent.putExtra(DetailActivity.KEY_RECIPE_NAME, recipeName);
                 PendingIntent pendingIntent = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                    pendingIntent = PendingIntent.getService(context, 0, openActivityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    pendingIntent = PendingIntent.getService(context, 0, openActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 }
                 views.setOnClickPendingIntent(R.id.widget_recipe_text_view, pendingIntent);
             } else {

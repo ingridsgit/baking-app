@@ -6,8 +6,6 @@
     android:orientation="vertical"
     tools:context="com.example.android.bakingapp.DetailActivity">
 
-    <include
-        layout="@layout/recipe_summary"
-        />
+    <include layout="@layout/recipe_summary" />
 
 </LinearLayout>

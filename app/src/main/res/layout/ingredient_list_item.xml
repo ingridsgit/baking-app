@@ -1,40 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/padding_list_item"
-    android:paddingStart="@dimen/padding_list_item"
-    android:paddingRight="@dimen/padding_list_item"
     android:paddingEnd="@dimen/padding_list_item"
+    android:paddingLeft="@dimen/padding_list_item"
+    android:paddingRight="@dimen/padding_list_item"
+    android:paddingStart="@dimen/padding_list_item"
     android:paddingTop="@dimen/padding_list_item">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/ingredient_quantity_text_view"
-        android:paddingLeft="@dimen/padding_list_item"
-        tools:text="3"/>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_list_item"
+        tools:text="3" />
+
+    <TextView
         android:id="@+id/ingredient_measure_text_view"
-        tools:text="tea spoons"
-        android:paddingLeft="@dimen/padding_list_item"/>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_list_item"
+        tools:text="tea spoons" />
+
+    <TextView
         android:id="@+id/ingredient_name_text_view"
-        tools:text="Ingredient"
-        android:paddingLeft="@dimen/padding_list_item"/>
-
-
-
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_list_item"
+        tools:text="Ingredient" />
 
 
 </LinearLayout>

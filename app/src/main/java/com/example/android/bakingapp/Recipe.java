@@ -6,15 +6,15 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class Recipe implements Parcelable{
-    private int id;
-    private String name;
-    private ArrayList<Ingredient> ingredients = new ArrayList<>();
-    private ArrayList<Step> steps;
-    private int servings;
-    private String imagePath;
+public class Recipe implements Parcelable {
+    private final int id;
+    private final String name;
+    private ArrayList<Ingredient> ingredients;
+    private final ArrayList<Step> steps;
+    private final int servings;
+    private final String imagePath;
 
-    public Recipe(int id, String name, ArrayList<Ingredient> ingredients, ArrayList<Step> steps, int servings, @Nullable String imagePath){
+    public Recipe(int id, String name, ArrayList<Ingredient> ingredients, ArrayList<Step> steps, int servings, @Nullable String imagePath) {
         this.id = id;
         this.name = name;
         this.ingredients = ingredients;
@@ -23,7 +23,7 @@ public class Recipe implements Parcelable{
         this.imagePath = imagePath;
     }
 
-    public Recipe(Parcel in){
+    private Recipe(Parcel in) {
         id = in.readInt();
         name = in.readString();
         ingredients = in.createTypedArrayList(Ingredient.CREATOR);
@@ -59,9 +59,6 @@ public class Recipe implements Parcelable{
         parcel.writeString(imagePath);
 
     }
-    public int getId() {
-        return id;
-    }
 
     public String getName() {
         return name;
@@ -77,15 +74,6 @@ public class Recipe implements Parcelable{
 
     public ArrayList<Step> getSteps() {
         return steps;
-    }
-    
-    public Step getStepById(int stepId){
-        for ( Step step: steps ) {
-         if (step.getId() == stepId){
-             return step;
-         }
-        }
-        return null;
     }
 
     public int getServings() {

@@ -1,9 +1,21 @@
 package com.example.android.bakingapp;
 
-import android.content.Context;
+//Copyright 2013 Square, Inc.
+//
+//        Licensed under the Apache License, Version 2.0 (the "License");
+//        you may not use this file except in compliance with the License.
+//        You may obtain a copy of the License at
+//
+//        http://www.apache.org/licenses/LICENSE-2.0
+//
+//        Unless required by applicable law or agreed to in writing, software
+//        distributed under the License is distributed on an "AS IS" BASIS,
+//        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//        See the License for the specific language governing permissions and
+//        limitations under the License.
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +32,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     private final RecipeClickHandler recipeClickHandler;
 
 
-    public RecipeAdapter(RecipeClickHandler recipeClickHandler){
+    public RecipeAdapter(RecipeClickHandler recipeClickHandler) {
         this.recipeClickHandler = recipeClickHandler;
     }
 
@@ -38,7 +50,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         holder.recipeName.setText(currentRecipe.getName());
         String imagePath = currentRecipe.getImagePath();
 
-        if (imagePath == null || imagePath.isEmpty()){
+        if (imagePath == null || imagePath.isEmpty()) {
             imagePath = EMPTY_PATH;
         }
         Picasso.get()
@@ -54,25 +66,25 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
 
-    public interface RecipeClickHandler{
+    public interface RecipeClickHandler {
         void onRecipeClick(Recipe recipe);
     }
 
 
     @Override
     public int getItemCount() {
-        if (recipes == null){
+        if (recipes == null) {
             return 0;
         } else {
-            int size = recipes.size();
-            return size ;}
+            return recipes.size();
+        }
     }
 
-    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView recipeImage;
         private final TextView recipeName;
 
-        public RecipeViewHolder(View itemView) {
+        RecipeViewHolder(View itemView) {
             super(itemView);
             recipeImage = itemView.findViewById(R.id.recipe_image);
             recipeName = itemView.findViewById(R.id.recipe_name);

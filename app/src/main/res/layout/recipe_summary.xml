@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/recipe_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/recipe_image_view"
-        android:contentDescription="@string/recipe_picture"/>
+        android:contentDescription="@string/recipe_picture" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/servings_text_view"
-        tools:text="Ingredients for 4 people:"
+        style="@style/subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:padding="4dp"
-        style="@style/subtitle"/>
+        tools:text="Ingredients for 4 people:" />
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/ingredient_list"
-        android:dividerHeight="0dp"
-        android:padding="@dimen/padding">
-    </ListView>
-
-    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:dividerHeight="0dp"
+        android:padding="@dimen/padding"/>
+
+    <ListView
         android:id="@+id/step_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/grey_background"
         android:padding="@dimen/padding">
 

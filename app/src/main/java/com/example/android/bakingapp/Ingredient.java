@@ -3,19 +3,19 @@ package com.example.android.bakingapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Ingredient implements Parcelable{
-    private double quantity;
+public class Ingredient implements Parcelable {
+    private final double quantity;
 
-    private String measure;
-    private String name;
+    private final String measure;
+    private final String name;
 
-    public Ingredient(double quantity, String measure, String name){
+    public Ingredient(double quantity, String measure, String name) {
         this.quantity = quantity;
         this.measure = measure;
         this.name = name;
     }
 
-    protected Ingredient(Parcel in) {
+    private Ingredient(Parcel in) {
         quantity = in.readDouble();
         measure = in.readString();
         name = in.readString();

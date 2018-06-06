@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 
-public class IngredientAdapter extends ArrayAdapter<Ingredient>{
+class IngredientAdapter extends ArrayAdapter<Ingredient> {
 
     public IngredientAdapter(@NonNull Context context, @NonNull List<Ingredient> objects) {
         super(context, 0, objects);
@@ -21,7 +21,7 @@ public class IngredientAdapter extends ArrayAdapter<Ingredient>{
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        if (convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.ingredient_list_item, parent, false);
         }
         Ingredient currentIngredient = getItem(position);

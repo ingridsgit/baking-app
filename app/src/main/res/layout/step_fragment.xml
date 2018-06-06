@@ -3,49 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.bakingapp.StepActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.example.android.bakingapp.StepActivity">
 
     <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/player_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/player_view"
-        >
+        android:layout_weight="1">
 
     </com.google.android.exoplayer2.ui.PlayerView>
 
     <FrameLayout
+        android:id="@+id/description_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/description_view"
-        >
+        android:layout_weight="1">
 
         <TextView
+            android:id="@android:id/empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
-            android:id="@android:id/empty"
-            android:text="@string/empty_view"/>
+            android:text="@string/empty_view" />
 
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:drawSelectorOnTop="false"
             android:layout_gravity="center"
+            android:drawSelectorOnTop="false"
             android:gravity="center_horizontal"
             android:padding="@dimen/padding"
-            tools:text="Here is what to do"/>
+            tools:text="Here is what to do" />
     </FrameLayout>
-
-    <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-        <!---->
-        <!--android:id="@+id/description_text_view"/>-->
 
 </LinearLayout>
