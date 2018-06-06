@@ -92,6 +92,7 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(KEY_STEPS, steps);
         arrayListFragment.setArguments(bundle);
+
         return arrayListFragment;
     }
 
@@ -167,7 +168,6 @@ public class ArrayListFragment extends ListFragment implements Player.EventListe
         if (currentStep == null){
             playerView.setVisibility(View.GONE);
         }
-
         return view;
     }
 

@@ -5,6 +5,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +36,7 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
     private ListView ingredientListView;
     private ListView stepListView;
     private SharedPreferences sharedPreferences;
+    private ArrayListFragment stepFragment;
     private static final String EMPTY_PATH = "empty";
     private static final String KEY_INGREDIENT_LIST_STATE = "ingredient_state";
     private static final String KEY_STEP_LIST_STATE = "step_list_state";
@@ -39,8 +44,6 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
     public static final String KEY_RECIPE_NAME = "recipe_name";
     public static final String KEY_SELECTED_STEP = "selected_step";
     public static final String KEY_SELECTED_RECIPE = "selected_recipe";
-
-//    @Nullable private MyIdlingResource myIdlingResource;
 
 
     @Override
@@ -55,74 +58,64 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
             Intent starterIntent = getIntent();
             selectedRecipe = starterIntent.getParcelableExtra(MainActivity.KEY_RECIPE);
             if (isDualPane){
-                ArrayListFragment stepFragment = ArrayListFragment.newInstance(selectedRecipe.getSteps());
+                stepFragment = ArrayListFragment.newInstance(selectedRecipe.getSteps());
                 getSupportFragmentManager().beginTransaction().add(R.id.side_step_fragment, stepFragment).commit();
             }
         } else {
             selectedRecipe = savedInstanceState.getParcelable(KEY_SELECTED_RECIPE);
             selectedStep = savedInstanceState.getParcelable(KEY_SELECTED_STEP);
-            if (isDualPane){
-                ArrayListFragment stepFragment;
-                if (selectedStep != null){
-                    stepFragment = ArrayListFragment.newInstance(selectedStep.getId(), selectedRecipe.getSteps());
-                } else {
-                    stepFragment  = ArrayListFragment.newInstance(selectedRecipe.getSteps());
-                }
-
-                getSupportFragmentManager().beginTransaction().replace(R.id.side_step_fragment, stepFragment).commit();
-            }
         }
 
-            setTitle(selectedRecipe.getName());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+                setTitle(selectedRecipe.getName());
 
-            // Setup the recipe image
-            ImageView recipeImage = findViewById(R.id.recipe_image_view);
-            String imagePath = selectedRecipe.getImagePath();
-            if (imagePath == null || imagePath.isEmpty()) {
-                imagePath = EMPTY_PATH;
-                recipeImage.setVisibility(View.GONE);
-            }
+                // Setup the recipe image
+                ImageView recipeImage = findViewById(R.id.recipe_image_view);
+                String imagePath = selectedRecipe.getImagePath();
+                if (imagePath == null || imagePath.isEmpty()) {
+                    imagePath = EMPTY_PATH;
+                    recipeImage.setVisibility(View.GONE);
+                }
                 Picasso.get()
                         .load(imagePath)
                         .error(R.drawable.ic_image_black_48dp)
                         .into(recipeImage);
 
 
-            // Display the ingredients
-            TextView servingTextView = findViewById(R.id.servings_text_view);
-            servingTextView.setText(getString(R.string.servings, selectedRecipe.getServings()));
-            ArrayList<Ingredient> ingredients = selectedRecipe.getIngredients();
-            if (ingredients != null) {
-                IngredientAdapter ingredientAdapter = new IngredientAdapter(this, ingredients);
-                ingredientListView = findViewById(R.id.ingredient_list);
-                ingredientListView.setAdapter(ingredientAdapter);
-                ingredientListView.setDivider(null);
-            }
+                // Display the ingredients
+                TextView servingTextView = findViewById(R.id.servings_text_view);
+                servingTextView.setText(getString(R.string.servings, selectedRecipe.getServings()));
+                ArrayList<Ingredient> ingredients = selectedRecipe.getIngredients();
+                if (ingredients != null) {
+                    IngredientAdapter ingredientAdapter = new IngredientAdapter(this, ingredients);
+                    ingredientListView = findViewById(R.id.ingredient_list);
+                    ingredientListView.setAdapter(ingredientAdapter);
+                    ingredientListView.setDivider(null);
+                }
 
-            //Display the steps
-            final ArrayList<Step> steps = selectedRecipe.getSteps();
-            if (steps != null) {
-                StepAdapter stepAdapter = new StepAdapter(this, steps);
-                stepListView = findViewById(R.id.step_list);
-                stepListView.setAdapter(stepAdapter);
-                stepListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        selectedStep = steps.get(i);
-                        if (isDualPane) {
-                            ArrayListFragment stepFragment = ArrayListFragment.newInstance(i, steps);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.side_step_fragment, stepFragment).commit();
-                        } else {
-                            Intent stepDetails = new Intent(getApplicationContext(), StepActivity.class);
-                            stepDetails.putExtra(KEY_SELECTED_STEP, selectedStep);
-                            stepDetails.putExtra(KEY_SELECTED_RECIPE, selectedRecipe);
-                            getApplicationContext().startActivity(stepDetails);
+                //Display the steps
+                final ArrayList<Step> steps = selectedRecipe.getSteps();
+                if (steps != null) {
+                    StepAdapter stepAdapter = new StepAdapter(this, steps);
+                    stepListView = findViewById(R.id.step_list);
+                    stepListView.setAdapter(stepAdapter);
+                    stepListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            selectedStep = steps.get(i);
+                            if (isDualPane) {
+                                ArrayListFragment stepFragment = ArrayListFragment.newInstance(i, steps);
+                                getSupportFragmentManager().beginTransaction().replace(R.id.side_step_fragment, stepFragment).commit();
+                            } else {
+                                Intent stepDetails = new Intent(getApplicationContext(), StepActivity.class);
+                                stepDetails.putExtra(KEY_SELECTED_STEP, selectedStep);
+                                stepDetails.putExtra(KEY_SELECTED_RECIPE, selectedRecipe);
+                                getApplicationContext().startActivity(stepDetails);
+                            }
                         }
-                    }
-                });
+                    });
             }
 
     }
@@ -214,4 +207,5 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
         }
         return ingredientStringSet;
     }
+
 }

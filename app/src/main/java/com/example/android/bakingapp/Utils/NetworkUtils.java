@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-
 public final class NetworkUtils {
 
         private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
