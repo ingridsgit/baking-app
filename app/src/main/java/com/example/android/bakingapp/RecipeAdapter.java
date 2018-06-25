@@ -16,6 +16,7 @@ package com.example.android.bakingapp;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         holder.recipeName.setText(currentRecipe.getName());
         String imagePath = currentRecipe.getImagePath();
 
-        if (imagePath == null || imagePath.isEmpty()) {
+        if (TextUtils.isEmpty(imagePath)) {
             imagePath = EMPTY_PATH;
         }
         Picasso.get()

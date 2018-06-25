@@ -60,8 +60,7 @@ public class DetailActivity extends AppCompatActivity implements SharedPreferenc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        View sideFragmentView = findViewById(R.id.side_step_fragment);
-        isDualPane = sideFragmentView != null && sideFragmentView.getVisibility() == View.VISIBLE;
+        isDualPane = getResources().getBoolean(R.bool.isTablet);
 
         if (savedInstanceState == null) {
             Intent starterIntent = getIntent();

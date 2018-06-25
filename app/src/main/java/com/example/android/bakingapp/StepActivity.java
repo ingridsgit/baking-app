@@ -40,7 +40,7 @@ public class StepActivity extends AppCompatActivity {
     private StepView stepBar;
     private StepFragmentPagerAdapter pagerAdapter;
     private ViewPager viewPager;
-    static boolean isLandscape = false;
+    static boolean isLandscape;
 
     private static final String KEY_RECIPE = "recipe";
     private static final String KEY_STEP = "step";
@@ -62,9 +62,9 @@ public class StepActivity extends AppCompatActivity {
 
         }
 
-        //find out if the device is in landscape mode
+        isLandscape = getResources().getBoolean(R.bool.isLandscape);
+
         stepBar = findViewById(R.id.step_bar);
-        isLandscape = stepBar == null;
         steps = currentRecipe.getSteps();
         if (!isLandscape) {
             stepBar.setStepsNumber(steps.size());

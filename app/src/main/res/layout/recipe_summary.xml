@@ -17,7 +17,7 @@
         style="@style/subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
+        android:padding="@dimen/padding_serving_tv"
         tools:text="Ingredients for 4 people:" />
 
     <ListView
