@@ -5,6 +5,6 @@ The project also contains a **widget** which displays the list of ingredients ne
 
 # External libraries
 
-The videos are displayed using the **ExoPlayer** library.
-The steps are outlined using the **StepView** library.
-The images are downloaded and cached using the **Picasso** library.
+- The videos are displayed using the **ExoPlayer** library.
+- The steps are outlined using the **StepView** library.
+- The images are downloaded and cached using the **Picasso** library.
